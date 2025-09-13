@@ -1,0 +1,5 @@
+{
+  "name": "Random Episode Finder",
+  "description": "An application to help users decide what to watch by providing a random episode from a TV series. Features include show search, season selection, a 'Surprise Me' option, and a local favorites system.",
+  "requestFramePermissions": []
+}
