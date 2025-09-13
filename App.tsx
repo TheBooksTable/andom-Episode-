@@ -14,9 +14,11 @@ const App: React.FC = () => {
     const [isAppLoading, setIsAppLoading] = useState(true);
     const [isSearching, setIsSearching] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
+    const [dropdownVisible, setDropdownVisible] = useState<boolean>(true);
     const [selectedShow, setSelectedShow] = useState<Show | null>(null);
     const [episodes, setEpisodes] = useState<ApiEpisode[]>([]);
     const [seasonInfo, setSeasonInfo] = useState({ min: 1, max: 1, total: 1 });
+    const [seasonEpisodeCounts, setSeasonEpisodeCounts] = useState<{ season: number; count: number }[]>([]);
     const [randomEpisode, setRandomEpisode] = useState<FormattedEpisode | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [favorites, setFavorites] = useState<Show[]>([]);
@@ -62,6 +64,7 @@ const App: React.FC = () => {
         setError(null);
         setRandomEpisode(null);
         setSearchTerm(showName);
+        setDropdownVisible(false);
         
         try {
             const showId = await fetchShowId(showName);
@@ -71,8 +74,20 @@ const App: React.FC = () => {
             if (fetchedEpisodes.length === 0) throw new Error("Could not find episodes for this show.");
             
             const totalSeasons = Math.max(...fetchedEpisodes.map(ep => ep.season));
+            
+            const countsBySeason = fetchedEpisodes.reduce((acc, episode) => {
+                acc[episode.season] = (acc[episode.season] || 0) + 1;
+                return acc;
+            }, {} as Record<number, number>);
+
+            const countsArray = Object.entries(countsBySeason).map(([season, count]) => ({
+                season: Number(season),
+                count: count,
+            })).sort((a, b) => a.season - b.season);
+
             setSelectedShow({ id: showId, name: showName });
             setEpisodes(fetchedEpisodes);
+            setSeasonEpisodeCounts(countsArray);
             setSeasonInfo({ min: 1, max: totalSeasons, total: totalSeasons });
         } catch (err: any) {
             setError(err.message);
@@ -105,7 +120,8 @@ const App: React.FC = () => {
     }, [handleSelectShow]);
 
     useEffect(() => {
-        if (episodes.length > 0 && selectedShow) {
+        if (episodes.length > 0 && selectedShow && searchTerm === selectedShow.name) {
+             // This condition prevents auto-finding when just typing a full show name
             handleFindEpisode();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -164,10 +180,17 @@ const App: React.FC = () => {
                         searchTerm={searchTerm}
                         onSearchTermChange={(term) => {
                             setSearchTerm(term);
-                            if (!term) setSelectedShow(null);
+                            setDropdownVisible(true);
+                            if (!term) {
+                                setSelectedShow(null);
+                                setRandomEpisode(null);
+                                setEpisodes([]);
+                                setSeasonEpisodeCounts([]);
+                            }
                         }}
                         suggestions={suggestions}
                         onSelectShow={handleSelectShow}
+                        dropdownVisible={dropdownVisible}
                     />
 
                     {selectedShow && (
@@ -177,6 +200,7 @@ const App: React.FC = () => {
                                 minSeason={seasonInfo.min}
                                 maxSeason={seasonInfo.max}
                                 onSeasonChange={(min, max) => setSeasonInfo(prev => ({ ...prev, min, max }))}
+                                seasonEpisodeCounts={seasonEpisodeCounts}
                             />
                             <div className="flex flex-col sm:flex-row gap-4 items-center">
                                 <button

@@ -70,6 +70,7 @@ export const selectRandomEpisode = (
     number: randomRawEpisode.number,
     summary: stripHtml(randomRawEpisode.summary),
     image: randomRawEpisode.image?.original || `https://picsum.photos/seed/${randomRawEpisode.id}/1280/720`,
+    airdate: randomRawEpisode.airdate,
     showName: showName,
   };
 };

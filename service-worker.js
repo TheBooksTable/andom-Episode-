@@ -1,23 +1,23 @@
 
 const CACHE_NAME = 'random-episode-finder-v1';
 const urlsToCache = [
-  '/',
-  '/index.html',
+  './',
+  './index.html',
   // Note: CDN scripts are fetched cross-origin and might not be cacheable
   // depending on CORS headers. This setup is for a typical deployment.
   // In a CDN-only setup, the browser's native caching is relied upon.
-  '/index.tsx',
-  '/App.tsx',
-  '/types.ts',
-  '/constants.ts',
-  '/services/tvmazeService.ts',
-  '/components/WaveBackground.tsx',
-  '/components/SplashScreen.tsx',
-  '/components/SearchInput.tsx',
-  '/components/SeasonSelector.tsx',
-  '/components/EpisodeCard.tsx',
-  '/components/FavoritesSidebar.tsx',
-  '/components/LoadingSpinner.tsx',
+  './index.tsx',
+  './App.tsx',
+  './types.ts',
+  './constants.ts',
+  './services/tvmazeService.ts',
+  './components/WaveBackground.tsx',
+  './components/SplashScreen.tsx',
+  './components/SearchInput.tsx',
+  './components/SeasonSelector.tsx',
+  './components/EpisodeCard.tsx',
+  './components/FavoritesSidebar.tsx',
+  './components/LoadingSpinner.tsx',
 ];
 
 self.addEventListener('install', (event) => {

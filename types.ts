@@ -10,6 +10,7 @@ export interface ApiEpisode {
   season: number;
   number: number;
   summary: string | null;
+  airdate: string | null;
   image: {
     medium: string;
     original: string;
@@ -23,5 +24,6 @@ export interface FormattedEpisode {
   number: number;
   summary: string;
   image: string;
+  airdate: string | null;
   showName: string;
 }

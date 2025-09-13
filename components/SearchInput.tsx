@@ -1,3 +1,4 @@
+
 import React from 'react';
 import type { Show } from '../types';
 
@@ -6,6 +7,7 @@ interface SearchInputProps {
   onSearchTermChange: (term: string) => void;
   suggestions: {name: string}[];
   onSelectShow: (showName: string) => void;
+  dropdownVisible: boolean;
 }
 
 const SearchIcon: React.FC = () => (
@@ -14,7 +16,7 @@ const SearchIcon: React.FC = () => (
     </svg>
 );
 
-const SearchInput: React.FC<SearchInputProps> = ({ searchTerm, onSearchTermChange, suggestions, onSelectShow }) => {
+const SearchInput: React.FC<SearchInputProps> = ({ searchTerm, onSearchTermChange, suggestions, onSelectShow, dropdownVisible }) => {
   return (
     <div className="relative w-full">
       <div className="relative">
@@ -29,8 +31,8 @@ const SearchInput: React.FC<SearchInputProps> = ({ searchTerm, onSearchTermChang
             className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:ring-2 focus:ring-purple-500 focus:outline-none transition duration-300"
         />
       </div>
-      {searchTerm && suggestions.length > 0 && (
-        <ul className="absolute z-10 w-full mt-2 bg-white/5 backdrop-blur-lg border border-white/10 rounded-lg max-h-60 overflow-y-auto">
+      {dropdownVisible && searchTerm && suggestions.length > 0 && (
+        <ul className="absolute z-10 w-full mt-2 bg-slate-900/90 backdrop-blur-xl border border-white/10 rounded-lg max-h-60 overflow-y-auto">
           {suggestions.map((show) => (
             <li
               key={show.name}
